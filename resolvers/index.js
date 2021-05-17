@@ -4,7 +4,8 @@ var Pin = require('../models/pin');
 module.exports = {
     Query: {
         boards: () => Board.find({}),
-        pins: () => Pin.find({})
+        pins: () => Pin.find({}),
+        hello: () => 'Hello world!'
     },
     Mutation: {
         createBoard : (parent, args) => {

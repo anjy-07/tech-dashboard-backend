@@ -36,11 +36,6 @@ module.exports = gql `
         created_at: String!
         updated_at: String!
     },
-    type File {
-    filename: String!
-    mimetype: String!
-    encoding: String!
-  },
     type Query {
      boards: [Board],
      boardsByUser: [Board],
@@ -50,13 +45,12 @@ module.exports = gql `
      pinsByBoard: [Pin],
      pinByCategory: [Pin],
      pinByTags: [Pin],
-     uploads: [File]
+     hello: String
     }
     type Mutation {
-        createBoard(name: String!, category: String, tags: String): Board
-        updateBoard(name: String!, category: String, tags: String): Board
+        createBoard(name: String!, category: String, tags: [String]): Board
+        updateBoard(name: String!, category: String, tags: [String]): Board
         addPinToBoard(boardId: String!, name: String!, description: String, url: String!, category: String, tags: String): Pin
-        singleUpload(file: Upload!): File!
     }
  
 `;
