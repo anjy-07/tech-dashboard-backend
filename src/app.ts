@@ -1,10 +1,9 @@
 import { ApolloServer } from 'apollo-server-express';
-import { typeDefs } from './graphql/type-defs/type-def';
+import { typeDefs } from './graphql/schema/schema';
 import { resolvers } from './graphql/resolvers/resolver';
 import { Request, Response, NextFunction } from 'express';
 import csurf from 'csurf';
 import cookieParser from 'cookie-parser';
-import * as path from 'path';
 import logger from 'morgan';
 import express from 'express';
 import Debug from 'debug';
@@ -14,18 +13,15 @@ export const app = express()
 const apolloServer = new ApolloServer({ typeDefs, resolvers })
 apolloServer.applyMiddleware({ app })
 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-
 app.use(logger('dev'));
 app.use(csurf({cookie: true}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.all("*", (req: Request, res: Response, next: NextFunction) => {
     res.cookie("XSRF-TOKEN", req.csrfToken());
+    console.log(res)
     next();
 });
 

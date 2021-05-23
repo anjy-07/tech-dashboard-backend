@@ -11,16 +11,16 @@ export const typeDefs = gql`
         plan: String
         active: Boolean
         type: String
-        dateCreated: String
-        dateUpdated: String
+        createdAt: String
+        updatedAt: String
         boards : [Board]
     },
     type Board {
         id: String!
         name: String!
         category: String!
-        tags: String!
-        pins: [String]
+        tags: [String]
+        pins: [Pin]
         createdAt: String!
         updatedAt: String!
     },
@@ -31,10 +31,21 @@ export const typeDefs = gql`
         url: String!
         image: String
         category: String
-        tags: String
+        tags: [String]
         created_at: String!
         updated_at: String!
     },
+    input UserInput {
+        id: String
+        name: String!
+        email: String!
+        bio: String
+        mobile: String
+        username: String
+        plan: String
+        active: Boolean
+        type: String
+    }
     input BoardInput {
         id: String
         name: String!
@@ -56,15 +67,19 @@ export const typeDefs = gql`
         updated_at: String!
     }
     type Query {
-    boards(userId: String!): [Board],
-    boardByCategory(userId: String!, category: [String]): [Board],
-    boardByTags(userId: String!, tags: [String]): [Board],
-    pins(userId: String!): [Pin],
-    pinsByBoard(userId: String!, boardId: String!): [Pin],
-    pinByCategory(userId: String!, category: [String]): [Pin],
-    pinByTags(userId: String!, tags: [String]): [Pin]
+        user(userId: String!): User
+        boards(userId: String!): [Board],
+        boardByCategory(userId: String!, category: [String]): [Board],
+        boardByTags(userId: String!, tags: [String]): [Board],
+        pins(userId: String!): [Pin],
+        pinsByBoard(userId: String!, boardId: String!): [Pin],
+        pinByCategory(userId: String!, category: [String]): [Pin],
+        pinByTags(userId: String!, tags: [String]): [Pin]
     }
     type Mutation {
+        createUser(user: UserInput): Boolean
+        updateUser(user: UserInput): Boolean
+        deleteUser(userId: String): Boolean
         createBoard(userId: String!, board: BoardInput!): Board
         updateBoard(userId: String!, board: BoardInput!): Board
         addPinToBoard(userId: String!, boardId: String!, pin: PinInput!): Pin

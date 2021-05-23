@@ -10,7 +10,7 @@ export interface User {
     plan: string;
     active: boolean;
     type: string;
-    dateCreated: string;
-    dateUpdated: string;
+    createdAt: string;
+    updatedAt: string;
     boards : [Board];
 }
