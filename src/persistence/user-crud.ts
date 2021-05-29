@@ -1,43 +1,44 @@
-import { USER_COLLECTION } from '../constants/firebase-constants';
-import firebase from '../connectors/firebase';
+
+import { db } from './collection';
 import { User } from '../models/user';
 
-const db = firebase.firestore();
+const usersCollection = db.users;
 
-const userCollection = db.collection(USER_COLLECTION);
-
-export const createUser = async (user: User): Promise<boolean> => {
-    return await userCollection.doc(user.id)
-        .set({
-            ...user,
-            createdAt: new Date().toISOString(),
-            updatedAt: null,
-        })
-    .then(() => true);
+export const createUser = async (user: User): Promise<User> => {
+    const newUser: User = {
+        ...user,
+        createdAt: new Date().toISOString(),
+        updatedAt: null,
+    }
+    return await usersCollection.doc(user.id)
+        .set(newUser, { merge: true })
+        .then(_ => newUser);
 }
 
-export const updateUser = async (user: User): Promise<boolean> => {
-    return await userCollection.doc(user.id)
-        .set({
-            ...user,
-            updatedAt: new Date().toISOString(),
-        }, { merge: true })
-    .then(() => true);
+export const updateUser = async (user: User): Promise<User> => {
+    const updatedUser: User = {
+        ...user,
+        updatedAt: new Date().toISOString()
+    };
+    return await usersCollection.doc(user.id)
+        .set(updatedUser, { merge: true })
+        .then(_ => updatedUser);
 }
 
 export const getUser = async (userId: string): Promise<User> => {
-    return await userCollection.doc(userId)
+    return await usersCollection.doc(userId)
         .get()
-    .then(user => {
-        if(user.exists) {
-            return user.data() as User;
-        } else {
-            throw new Error("User not found");
-        }});
+        .then(user => {
+            if (user.exists) {
+                return user.data() as User;
+            } else {
+                throw new Error("User not found");
+            }
+        });
 }
 
 export const deleteUser = async (userId: string): Promise<boolean> => {
-    return await userCollection.doc(userId)
+    return await usersCollection.doc(userId)
         .delete()
-    .then(() => true);
+        .then(() => true);
 }

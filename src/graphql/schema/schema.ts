@@ -13,7 +13,6 @@ export const typeDefs = gql`
         type: String
         createdAt: String
         updatedAt: String
-        boards : [Board]
     },
     type Board {
         id: String!
@@ -45,15 +44,13 @@ export const typeDefs = gql`
         plan: String
         active: Boolean
         type: String
+        boards: [BoardInput]!
     }
     input BoardInput {
         id: String
         name: String!
         category: String!
-        tags: String!
-        pins: [String]
-        createdAt: String!
-        updatedAt: String!
+        tags: [String]
     },
     input PinInput {
         id: String
@@ -62,26 +59,23 @@ export const typeDefs = gql`
         url: String!
         image: String
         category: String
-        tags: String
-        created_at: String!
-        updated_at: String!
+        tags: [String]
     }
     type Query {
         user(userId: String!): User
-        boards(userId: String!): [Board],
-        boardByCategory(userId: String!, category: [String]): [Board],
-        boardByTags(userId: String!, tags: [String]): [Board],
-        pins(userId: String!): [Pin],
-        pinsByBoard(userId: String!, boardId: String!): [Pin],
-        pinByCategory(userId: String!, category: [String]): [Pin],
-        pinByTags(userId: String!, tags: [String]): [Pin]
+        boards(userId: String!): [Board]
+        boardByCategory(userId: String!, category: String!): [Board]
+        boardByTags(userId: String!, tags: [String!]!): [Board]
+        pinsByBoard(userId: String!, boardId: String!): [Pin]
     }
     type Mutation {
-        createUser(user: UserInput): Boolean
-        updateUser(user: UserInput): Boolean
+        createUser(user: UserInput): User
+        updateUser(user: UserInput): User
         deleteUser(userId: String): Boolean
         createBoard(userId: String!, board: BoardInput!): Board
         updateBoard(userId: String!, board: BoardInput!): Board
+        deleteBoard(userId: String!, boardId: String!): Boolean
         addPinToBoard(userId: String!, boardId: String!, pin: PinInput!): Pin
+        deletePinFromBoard(userId: String!, boardId: String!, pinId: String!): Boolean
     }
 `;
